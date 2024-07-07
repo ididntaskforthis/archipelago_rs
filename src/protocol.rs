@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(tag = "cmd")]
 pub enum ClientMessage {
     Connect(Connect),
@@ -20,7 +20,7 @@ pub enum ClientMessage {
     SetNotify(SetNotify),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(tag = "cmd")]
 pub enum ServerMessage {
     RoomInfo(RoomInfo),
@@ -38,7 +38,7 @@ pub enum ServerMessage {
     SetReply(SetReply),
 }
 
-#[derive(Debug, Serialize_repr, Deserialize_repr)]
+#[derive(Debug, Serialize_repr, Deserialize_repr, Clone)]
 #[repr(u16)]
 pub enum Permission {
     Disabled = 0,
@@ -48,7 +48,7 @@ pub enum Permission {
     AutoEnabled = 7,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NetworkVersion {
     pub major: i32,
     pub minor: i32,
@@ -56,7 +56,7 @@ pub struct NetworkVersion {
     pub class: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NetworkPlayer {
     pub team: i32,
     pub slot: i32,
@@ -64,7 +64,7 @@ pub struct NetworkPlayer {
     pub name: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NetworkItem {
     pub item: i32,
     pub location: i32,
@@ -72,7 +72,7 @@ pub struct NetworkItem {
     pub flags: i32,
 }
 
-#[derive(Debug, Serialize_repr, Deserialize_repr)]
+#[derive(Debug, Serialize_repr, Deserialize_repr, Clone)]
 #[repr(u16)]
 pub enum SlotType {
     Spectator = 0,
@@ -80,7 +80,7 @@ pub enum SlotType {
     Group = 2,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NetworkSlot {
     pub name: String,
     pub game: String,
@@ -91,15 +91,15 @@ pub struct NetworkSlot {
 pub fn network_version() -> NetworkVersion {
     NetworkVersion {
         major: 0,
-        minor: 3,
-        build: 7,
+        minor: 4,
+        build: 5,
         class: "Version".to_string(),
     }
 }
 
 // REQUESTS
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Connect {
     pub password: Option<String>,
     pub name: String,
@@ -110,29 +110,29 @@ pub struct Connect {
     pub game: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ConnectUpdate {
     pub items_handling: i32,
     pub tags: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LocationChecks {
     pub locations: Vec<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LocationScouts {
     pub locations: Vec<i32>,
     pub create_as_hint: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct StatusUpdate {
     pub status: ClientStatus,
 }
 
-#[derive(Debug, Serialize_repr, Deserialize_repr)]
+#[derive(Debug, Serialize_repr, Deserialize_repr, Clone)]
 #[repr(u16)]
 pub enum ClientStatus {
     ClientUnknown = 0,
@@ -141,18 +141,18 @@ pub enum ClientStatus {
     ClientGoal = 30,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Say {
     pub text: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GetDataPackage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub games: Option<Vec<String>>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Bounce {
     pub games: Option<Vec<String>>,
     pub slots: Option<Vec<String>>,
@@ -160,12 +160,12 @@ pub struct Bounce {
     pub data: Value,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Get {
     pub keys: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Set {
     pub key: String,
     pub default: Value,
@@ -173,20 +173,20 @@ pub struct Set {
     pub operations: Vec<DataStorageOperation>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DataStorageOperation {
     pub replace: String, // TODO: enum-ify?
     pub value: Value,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SetNotify {
     pub keys: Vec<String>,
 }
 
 // RESPONSES
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct RoomInfo {
     pub version: NetworkVersion,
     pub tags: Vec<String>,
@@ -200,12 +200,12 @@ pub struct RoomInfo {
     pub time: f32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ConnectionRefused {
     pub errors: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Connected {
     pub team: i32,
     pub slot: i32,
@@ -216,18 +216,18 @@ pub struct Connected {
     pub slot_info: HashMap<String, NetworkSlot>, // TODO: docs claim this is an int key. they are lying?
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ReceivedItems {
     pub index: i32,
     pub items: Vec<NetworkItem>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LocationInfo {
     pub locations: Vec<NetworkItem>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct RoomUpdate {
     // Copied from RoomInfo
     pub version: Option<NetworkVersion>,
@@ -247,12 +247,12 @@ pub struct RoomUpdate {
     pub missing_locations: Option<Vec<i32>>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Print {
     pub text: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PrintJSON {
     pub data: Vec<JSONMessagePart>,
     pub r#type: Option<String>,
@@ -262,7 +262,7 @@ pub struct PrintJSON {
     pub countdown: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct JSONMessagePart {
     pub r#type: Option<String>,
     pub text: Option<String>,
@@ -271,24 +271,24 @@ pub struct JSONMessagePart {
     pub player: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DataPackage {
     pub data: DataPackageObject,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DataPackageObject {
     pub games: HashMap<String, GameData>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GameData {
     pub item_name_to_id: HashMap<String, i32>,
     pub location_name_to_id: HashMap<String, i32>,
     pub version: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Bounced {
     pub games: Vec<String>,
     pub slots: Vec<i32>,
@@ -296,19 +296,19 @@ pub struct Bounced {
     pub data: Value,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct InvalidPacket {
     pub r#type: String,
     pub original_cmd: Option<String>,
     pub text: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Retrieved {
     keys: Value,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SetReply {
     key: String,
     value: Value,
