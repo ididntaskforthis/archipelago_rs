@@ -108,6 +108,7 @@ pub struct Connect {
     pub tags: Vec<String>,
     pub uuid: String,
     pub game: String,
+    pub slot_data: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

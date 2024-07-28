@@ -153,18 +153,21 @@ impl ArchipelagoClient {
         &mut self,
         game: &str,
         name: &str,
+        uuid: &str,
         password: Option<&str>,
         items_handling: Option<i32>,
         tags: Vec<String>,
+        slot_data: bool,
     ) -> Result<Connected, ArchipelagoError> {
         self.send(ClientMessage::Connect(Connect {
             game: game.to_string(),
             name: name.to_string(),
-            uuid: "".to_string(),
+            uuid: uuid.to_string(),
             password: password.map(|p| p.to_string()),
             version: network_version(),
             items_handling,
             tags,
+            slot_data,
         }))
         .await?;
         let response = self
